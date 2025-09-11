@@ -1,0 +1,48 @@
+/* Attach the same validation to every form with class .auth-form
+     We query inputs relative to the form so IDs don't need to be unique across the page. */
+  document.querySelectorAll('.auth-form').forEach(form => {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = (this.querySelector('[name="email"]') || {}).value?.trim() || '';
+      const password = (this.querySelector('[name="password"]') || {}).value || '';
+      const msg = this.querySelector('.formMsg');
+
+      // clear previous message
+      msg.innerHTML = '';
+
+      // simple email validation
+      const emailRe = /^\S+@\S+\.\S+$/;
+
+      if (!email || !password) {
+        msg.innerHTML = '<div class="alert alert-danger">All fields are required!</div>';
+        return;
+      }
+      if (!emailRe.test(email)) {
+        msg.innerHTML = '<div class="alert alert-warning">Invalid email format!</div>';
+        return;
+      }
+      if (password.length < 8) {
+        msg.innerHTML = '<div class="alert alert-warning">Password must be at least 8 characters!</div>';
+        return;
+      }
+      if (!/[A-Z]/.test(password)) {
+        msg.innerHTML = '<div class="alert alert-warning">Password must contain at least one uppercase letter!</div>';
+        return;
+      }
+      if (!/[a-z]/.test(password)) {
+        msg.innerHTML = '<div class="alert alert-warning">Password must contain at least one lowercase letter!</div>';
+        return;
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        msg.innerHTML = '<div class="alert alert-warning">Password must contain at least one special character!</div>';
+        return;
+      }
+
+      // SUCCESS - here you'd call your API / Firebase Auth etc.
+      msg.innerHTML = '<div class="alert alert-success">Form submitted successfully!</div>';
+
+      // Optional: reset the form after success
+      // this.reset();
+    });
+  });

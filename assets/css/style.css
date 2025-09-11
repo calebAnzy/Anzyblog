@@ -1,0 +1,69 @@
+body {
+  background: linear-gradient(135deg, #e4d5b7, #d9b99b);
+}
+
+.card {
+  background: linear-gradient(135deg, #e4d5b7, #d9b99b);
+}
+
+.nav-link {
+  background: linear-gradient(135deg, #faf0e6, #e4d5b7);
+  color: white !important;
+  width: 150px;
+  border-radius: 30px;
+  padding: 8px 18px;
+  margin: 0 6px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.nav-bar {
+  background-color: #d9b99b;
+  ;
+  color: white !important;
+  padding: 8px 18px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+img {
+  transition: transform 0.3s;
+  border-radius: 7px;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+
+
+/* Carousel styling */
+.carousel-item img {
+  filter: brightness(70%); /* lower = darker */
+}
+
+.caption-card {
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  border-radius: 10px;            /* rounded corners */
+  color: #fff;                    /* white text */
+  width: 350px;                 /* prevent card from being too wide */
+}
+.carousel-caption {
+  top: 0;
+  bottom: 0;
+}
+
+
+/* Mobile view (screens below 768px) */
+@media (max-width: 768px) {
+  .carousel-item img {
+    height: 500px;  /* make taller on mobile */
+    object-fit: cover;
+  }
+}
