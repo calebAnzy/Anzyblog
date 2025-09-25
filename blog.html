@@ -15,90 +15,57 @@
     </style>
 </head>
 
-<body>
+<body class="container py-4">
 
-    <header>
+  <div id="singlePost"></div>
 
-        <div class="container-fluid" style="height: 50px; background-color: #6E876A;">
-            <div class="row p-2">
-                <div class="col-md-12 text-center">
-                    <i class="fas fa-home m-3"></i>
-                    <i class="fas fa-user m-3"></i>
-                    <i class="fas fa-cog m-3"></i>
-                    <i class="fab fa-github m-3"></i>
-                    <i class="far fa-smile m-3"></i>
-                </div>
-            </div>
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    // Get the post ID from the URL (example: blog.html?id=123)
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+
+    async function loadSinglePost() {
+      if (!postId) {
+        document.getElementById('singlePost').innerHTML = '<p>No post ID found.</p>';
+        return;
+      }
+
+      // Fetch the post from Supabase
+      const { data: post, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('id', postId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching post:', error.message);
+        document.getElementById('singlePost').innerHTML = '<p>Error loading post.</p>';
+        return;
+      }
+
+      // Render the post
+      const postDate = new Date(post.created_at).toLocaleDateString();
+
+      const postHTML = `
+        <div class="card mb-3">
+          <img src="${post.image_url || 'assets/img/placeholder.jpg'}" class="card-img-top" alt="${post.title}">
+          <div class="card-body">
+            <h6>${postDate}</h6>
+            <h2>${post.title}</h2>
+            <p>${post.content}</p>
+            <hr>
+            <p><strong>Author:</strong> ${post.author || 'Admin'}</p>
+          </div>
         </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 text-center p-2">
-                    <h1>Wanderblog</h1>
-                </div>
-            </div>
-        </div>
-        <nav class="navbar navbar-expand-sm">
-            <div class="container-fluid">
-                <button class="navbar-toggler mx-auto" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#mynavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="mynavbar">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                            <a class="btn btn-primary mx-1" href="index.html">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary mx-1" href="#">Contact</a>
-                        </li>
+      `;
 
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+      document.getElementById('singlePost').innerHTML = postHTML;
+    }
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <img src="../assets/img/blog2.jpg" class="mb-2" alt="" style="width: 100%;">
-                        <div class="card-body">
-                            <h4>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad, quidem.</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, dolore. Qui, a tempore
-                                magni possimus necessitatibus exercitationem repudiandae nisi. Modi aspernatur sunt
-                                ipsam veniam quaerat magnam in voluptatibus, veritatis, temporibus velit, totam suscipit
-                                nemo aliquid ipsa commodi ipsum consectetur a. Nam enim consectetur, ipsum quis
-                                obcaecati quisquam aliquid? Nihil et atque animi rem eos placeat quia eveniet ullam quas
-                                voluptate, consequuntur unde doloribus id, nam labore numquam amet voluptas officiis
-                                incidunt fuga consequatur ea veritatis nesciunt quos. Nulla fugit tempora error
-                                consequuntur accusamus omnis a sequi illo modi facilis? Sequi totam quo magnam
-                                consequuntur illo nulla ex dolore quaerat deserunt, ea nobis! Tempore autem dolor ipsam
-                                tempora cumque aliquam eaque placeat voluptate quod praesentium esse inventore corrupti
-                                nulla iusto repellendus odio quam, quos magnam deserunt, dolore, vitae nisi laboriosam
-                                adipisci! Quis asperiores adipisci quas, architecto doloremque delectus reiciendis ut at
-                                quidem sapiente quasi, sed minima deleniti magni temporibus perferendis corporis sit
-                                dolor repellendus nostrum vel. Dicta necessitatibus optio iste dolorem dolorum quis
-                                praesentium corporis distinctio eius maiores pariatur rerum ex obcaecati excepturi
-                                corrupti veniam sint nesciunt recusandae, nostrum eos inventore quibusdam deserunt nemo
-                                est. Consectetur, praesentium. Quisquam consectetur laudantium asperiores, iste dolorum
-                                in vitae odit ipsam quasi. Architecto, accusamus tempore!</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-
-
-
-
-    <script type="module" src="dashboard.js"></script>
-
+    loadSinglePost();
+  </script>
 </body>
 
 </html>

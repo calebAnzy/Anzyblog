@@ -129,54 +129,7 @@
         <div class="container-fluid">
             <div class="row flex-row-reverse g-md-5">
                 <main class="col-md-9">
-                    <div class="card mb-3">
-                        <a href="blog.html">
-                            <img src="assets/img/blog2.jpg" class="mb-2" alt="" style="width: 100%;">
-                        </a>
-                        <div class="card-body">
-                            <h6>26/08/2025</h6>
-                            <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, suscipit ipsam?</h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus quas, vero quis ea harum
-                                quidem
-                                temporibus officia quaerat voluptatem a exercitationem alias consequatur at dolore nemo
-                                cumque
-                                saepe facere quam!</p>
-                            <p>READ MORE -></p>
-                            <hr>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <a href="#">
-                            <img src="assets/img/blog11.jpg" class="mb-2" alt="" style="width: 100%;">
-                        </a>
-                        <div class="card-body">
-                            <h6>26/08/2025</h6>
-                            <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, suscipit ipsam?</h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus quas, vero quis ea harum
-                                quidem
-                                temporibus officia quaerat voluptatem a exercitationem alias consequatur at dolore nemo
-                                cumque
-                                saepe facere quam!</p>
-                            <p>READ MORE -></p>
-                            <hr>
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <a href="#">
-                            <img src="assets/img/blog6.jpg" class="mb-2" alt="" style="width: 100%;">
-                        </a>
-                        <div class="card-body">
-                            <h6>26/08/2025</h6>
-                            <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus, suscipit ipsam?</h3>
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Natus quas, vero quis ea harum
-                                quidem
-                                temporibus officia quaerat voluptatem a exercitationem alias consequatur at dolore nemo
-                                cumque
-                                saepe facere quam!</p>
-                            <p>READ MORE -></p>
-                            <hr>
-                        </div>
-                    </div>
+                    <div id="blogPosts"></div>
                 </main>
                 <aside class="col-md-3 border text-center">
                     <div class="sidebar align-items-center text-center border-bottom">
@@ -338,6 +291,55 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 
     <script type="module" src="supabase.js"></script>
+
+    <script type="module">
+        import { supabase } from './supabase.js';
+
+// Fetch posts from Supabase
+async function loadPosts() {
+  const { data: posts, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching posts:', error.message);
+    return;
+  }
+
+  const blogContainer = document.getElementById('blogPosts');
+  blogContainer.innerHTML = ''; // clear old content
+
+  if (!posts || posts.length === 0) {
+    blogContainer.innerHTML = '<p>No posts available.</p>';
+    return;
+  }
+
+  // Loop through posts and build cards
+  posts.forEach(post => {
+    const postDate = new Date(post.created_at).toLocaleDateString();
+
+    const card = `
+      <div class="card mb-3">
+        <a href="blog.html?id=${post.id}">
+          <img src="${post.image_url || 'assets/img/placeholder.jpg'}" class="mb-2" alt="${post.title}" style="max-width: 100%; height: auto;">
+        </a>
+        <div class="card-body">
+          <h6>${postDate}</h6>
+          <h3>${post.title}</h3>
+          <p>${post.content.substring(0, 150)}...</p>
+          <p><a href="blog.html?id=${post.id}">READ MORE -></a></p>
+          <hr>
+        </div>
+      </div>
+    `;
+    blogContainer.innerHTML += card;
+  });
+}
+
+loadPosts();
+</script>
+
 
 
 </body>

@@ -77,7 +77,7 @@ const tableBody = document.getElementById("posts-table");
         row.innerHTML = `
           <td>${post.id}</td>
           <td contenteditable="true">${post.title}</td>
-          <td contenteditable="true">${post.content}</td>
+          <td contenteditable="true">${post.content.substring(0, 100)}</td>
           <td>${new Date(post.created_at).toLocaleString()}</td>
           <td>
             <button onclick="updatePost(${post.id}, this)">Save</button>
